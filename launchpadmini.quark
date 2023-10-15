@@ -1,0 +1,9 @@
+(
+  name: "launchpadmini",
+  summary: "",
+  version: "0.1",
+  copyright: "madskjeldgaard",
+  dependencies: [
+      "https://github.com/madskjeldgaard/Monolithic"
+  ]
+)
