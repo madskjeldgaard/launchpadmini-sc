@@ -6,6 +6,7 @@
 // Example
 l = LaunchpadMiniMk1.new()
 
+// Randomize colors
 (
 r{
     loop{
@@ -13,7 +14,7 @@ r{
         8.do{|x|
             8.do{|y|
                 l.setColor(x,y,rrand(0,127));
-                (0.001).wait;
+                (rrand(0.001,0.01)).wait;
             }
         }
 
