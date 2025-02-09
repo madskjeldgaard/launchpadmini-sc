@@ -6,6 +6,13 @@ A simple interface for the Launchpad Mini controller to be used in SuperCollider
 
 NOTE: It's only tested with the MK1 version, but it should work with the MK2 version as well. Please let me know if it doesn't.
 
+## Features
+
+- Easily connect the device
+- Set colors of all pads
+- Register callbacks for all pads
+- GUI for simulating the hardware in case you don't have a controller connected.
+
 ## Installation
 
 ### Quark
@@ -108,4 +115,16 @@ r{
     }
 }.play;
 )
+
 ```
+
+### GUI
+
+```supercollider
+l = LaunchpadMiniMk1.new();
+
+l.gui;
+
+```
+
+
