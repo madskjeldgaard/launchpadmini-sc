@@ -296,18 +296,19 @@ LaunchpadMiniMk1GUI {
     }
 
     init { |argLaunchpad|
+        var windowSize = Rect(100, 100, 400, 400), buttonSize = Rect(0, 0, 35, 35);
         launchpad = argLaunchpad;
 
         // Create the window
-        window = Window("Launchpad Mini MK1 Simulator", Rect(100, 100, 400, 400)).front;
+        window = Window("Launchpad Mini MK1 Simulator", windowSize).front;
         window.onClose_({ this.free });
 
         // Create the 8x8 grid of buttons
         gridButtons = Array.fill(8, { Array.fill(8, { nil }) });
         8.do { |x|
             8.do { |y|
-                gridButtons[x][y] = Button(window, Rect((x * 40) + 20, (y * 40) + 80, 35, 35))
-                    .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
+                gridButtons[x][y] = Button(window, Rect((x * buttonSize.width) + 20, (y * buttonSize.height) + 80, buttonSize.width, buttonSize.height))
+                    .states_([["%,%".format(x,y), Color.black, Color.yellow], ["%,%".format(x,y), Color.black, Color.green]])
                     .action_({ |btn|
                         var state = btn.value;
                         if (state == 1, {
@@ -320,25 +321,25 @@ LaunchpadMiniMk1GUI {
         };
 
         // Create the side buttons
-        // Create the side buttons
         sideButtons = Array.fill(8, { nil });
         8.do { |y|
-            sideButtons[y] = Button(window, Rect(360, (y * 40) + 80, 35, 35)) // Changed x-coordinate from 20 to 380
-            .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
-            .action_({ |btn|
-                var state = btn.value;
-                if (state == 1, {
-                    launchpad.sideButtonCallbacks[y].value(launchpad, y, 127, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
-                }, {
-                    launchpad.sideButtonCallbacks[y].value(launchpad, y, 0, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
+            sideButtons[y] = Button(window, Rect(windowSize.width - buttonSize.width - 20, (y * buttonSize.height) + 80, buttonSize.width, buttonSize.height))
+                .states_([["%".format(y), Color.white, Color.black], ["%".format(y), Color.white, Color.black]])
+                .action_({ |btn|
+                    var state = btn.value;
+                    if (state == 1, {
+                        launchpad.sideButtonCallbacks[y].value(launchpad, y, 127, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
+                    }, {
+                        launchpad.sideButtonCallbacks[y].value(launchpad, y, 0, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
+                    });
                 });
-            });
         };
+
         // Create the top buttons
         topButtons = Array.fill(8, { nil });
         8.do { |x|
-            topButtons[x] = Button(window, Rect((x * 40) + 20, 20, 35, 35))
-                .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
+            topButtons[x] = Button(window, Rect((x * buttonSize.width) + 20, 20, buttonSize.width, buttonSize.height))
+                .states_([["%".format(x), Color.white, Color.black], ["%".format(x), Color.white, Color.black]])
                 .action_({ |btn|
                     var state = btn.value;
                     if (state == 1, {
