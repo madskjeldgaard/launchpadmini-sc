@@ -122,7 +122,7 @@ LaunchpadMiniMk1 {
         });
 
         if(devices.size < 1, {
-            "No device found".error;
+            "No device found - may only be used with GUI".warn;
         }, {
 
             deviceMidiOut = MIDIOut.newByName(midiDeviceName, midiPortName).latency_(0);
@@ -276,4 +276,75 @@ LaunchpadMiniMk1 {
         };
     }
 
+    gui{
+        LaunchpadMiniMk1GUI.new(this);
+    }
+}
+
+LaunchpadMiniMk1GUI {
+    var <window, <gridButtons, <sideButtons, <topButtons;
+    var <launchpad;
+
+    *new { |launchpad|
+        ^super.new.init(launchpad);
+    }
+
+    init { |argLaunchpad|
+        launchpad = argLaunchpad;
+
+        // Create the window
+        window = Window("Launchpad Mini MK1 Simulator", Rect(100, 100, 400, 400)).front;
+        window.onClose_({ this.free });
+
+        // Create the 8x8 grid of buttons
+        gridButtons = Array.fill(8, { Array.fill(8, { nil }) });
+        8.do { |x|
+            8.do { |y|
+                gridButtons[x][y] = Button(window, Rect((x * 40) + 20, (y * 40) + 80, 35, 35))
+                    .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
+                    .action_({ |btn|
+                        var state = btn.value;
+                        if (state == 1, {
+                            launchpad.callbacks[x][y].value(launchpad, \on, x, y, 127, LaunchpadMiniMk1.deviceButtonNotes[y][x], 0, nil);
+                        }, {
+                            launchpad.callbacks[x][y].value(launchpad, \off, x, y, 0, LaunchpadMiniMk1.deviceButtonNotes[y][x], 0, nil);
+                        });
+                    });
+            };
+        };
+
+        // Create the side buttons
+        // Create the side buttons
+        sideButtons = Array.fill(8, { nil });
+        8.do { |y|
+            sideButtons[y] = Button(window, Rect(360, (y * 40) + 80, 35, 35)) // Changed x-coordinate from 20 to 380
+            .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
+            .action_({ |btn|
+                var state = btn.value;
+                if (state == 1, {
+                    launchpad.sideButtonCallbacks[y].value(launchpad, y, 127, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
+                }, {
+                    launchpad.sideButtonCallbacks[y].value(launchpad, y, 0, LaunchpadMiniMk1.sideButtonNotes[y], 0, nil);
+                });
+            });
+        };
+        // Create the top buttons
+        topButtons = Array.fill(8, { nil });
+        8.do { |x|
+            topButtons[x] = Button(window, Rect((x * 40) + 20, 20, 35, 35))
+                .states_([["", Color.black, Color.gray], ["", Color.black, Color.white]])
+                .action_({ |btn|
+                    var state = btn.value;
+                    if (state == 1, {
+                        launchpad.topButtonCallbacks[x].value(launchpad, x, 127, LaunchpadMiniMk1.topButtonCCNums[x], 0, nil);
+                    }, {
+                        launchpad.topButtonCallbacks[x].value(launchpad, x, 0, LaunchpadMiniMk1.topButtonCCNums[x], 0, nil);
+                    });
+                });
+        };
+    }
+
+    free {
+        window.close;
+    }
 }
