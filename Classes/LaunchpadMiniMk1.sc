@@ -185,6 +185,9 @@ LaunchpadMiniMk1 {
             func.value(this, y,velocity, note, chan, uid);
         }, noteNum: note, chan: channel, srcID: nil /* TODO */);
 
+        // Store callback
+        sideButtonCallbacks[y] = func;
+
     }
 
     setTopButtonFunc{|x,func|
@@ -200,6 +203,9 @@ LaunchpadMiniMk1 {
 
             func.value(this, x,value, ccNum, chan, uid);
         }, ccNum: ccNum, chan: channel, srcID: nil /* TODO */);
+
+        // Store callback
+        topButtonCallbacks[x] = func;
     }
 
     // Colours on the controller are controlled using midi noteOn events, where the velocity is the color
