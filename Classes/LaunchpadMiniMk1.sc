@@ -44,7 +44,7 @@ LaunchpadMiniMk1 {
     var <channel = 0;
     var <verbose = true;
 
-    classvar <midiDeviceName = "Launchpad Mini", midiPortName = "Launchpad Mini";
+    classvar <midiDeviceName = "Launchpad Mini";
     classvar <deviceButtonNotes, <sideButtonNotes, <topButtonCCNums;
 
     *new{
@@ -124,8 +124,7 @@ LaunchpadMiniMk1 {
         if(devices.size < 1, {
             "No device found - may only be used with GUI".warn;
         }, {
-
-            deviceMidiOut = MIDIOut.newByName(midiDeviceName, midiPortName).latency_(0);
+            deviceMidiOut = MIDIOut.newByName(devices[0].device, devices[0].name).latency_(0);
 
             // A dirty hack to connect the device
             MIDIClient.sources.do{|src, srcNum|
